@@ -36,9 +36,9 @@ Sub RemoveColumns()
 
     For i = ActiveSheet.UsedRange.Columns.Count To 1 Step -1
         If Cells(1, i).Value <> "BR" And _
-           Cells(1, i).Value <> "Buyer code" And _
-           Cells(1, i).Value <> "po no" And _
-           Cells(1, i).Value <> "line no" And _
+           Cells(1, i).Value <> "WBC" And _
+           Cells(1, i).Value <> "PO No" And _
+           Cells(1, i).Value <> "Line No" And _
            Cells(1, i).Value <> "SO Sim" And _
            Cells(1, i).Value <> "SO Item" And _
            Cells(1, i).Value <> "Supplier#" And _
@@ -47,7 +47,7 @@ Sub RemoveColumns()
            Cells(1, i).Value <> "Desc" And _
            Cells(1, i).Value <> "Ord Tot" And _
            Cells(1, i).Value <> "Open Qty" And _
-           Cells(1, i).Value <> "Line Date Promissed" And _
+           Cells(1, i).Value <> "Line Date Requested" And _
            Cells(1, i).Value <> "PO Date" And _
            Cells(1, i).Value <> "supplier name" Then
             Columns(i).Delete
@@ -66,7 +66,7 @@ Sub CalculateAge()
     Sheets("Expedite Report").Select
     colPODate = FindColumn("PO Date")
     PODtAddr = Cells(2, colPODate).Address(False, False)
-    LnDtAddr = Cells(2, FindColumn("Line Date Promissed")).Address(False, False)
+    LnDtAddr = Cells(2, FindColumn("Line Date Requested")).Address(False, False)
     TotalRows = ActiveSheet.UsedRange.Rows.Count
     TotalCols = Columns(Columns.Count).End(xlToLeft).Column + 1
 
@@ -158,7 +158,7 @@ Sub RemoveBuyerCodes()
 
     Sheets("Expedite Report").Select
     TotalRows = ActiveSheet.UsedRange.Rows.Count
-    BCAddr = FindColumn("Buyer code")
+    BCAddr = FindColumn("WBC")
 
     For i = TotalRows To 2 Step -1
         CurrCell = Trim(Cells(i, 1).Value & Cells(i, BCAddr).Value)
