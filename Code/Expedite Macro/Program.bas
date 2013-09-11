@@ -47,7 +47,7 @@ Sub RemoveColumns()
            Cells(1, i).Value <> "Desc" And _
            Cells(1, i).Value <> "Ord Tot" And _
            Cells(1, i).Value <> "Open Qty" And _
-           Cells(1, i).Value <> "Line Date Requested" And _
+           Cells(1, i).Value <> "Line Promise Date" And _
            Cells(1, i).Value <> "PO Date" And _
            Cells(1, i).Value <> "supplier name" Then
             Columns(i).Delete
@@ -66,7 +66,7 @@ Sub CalculateAge()
     Sheets("Expedite Report").Select
     colPODate = FindColumn("PO Date")
     PODtAddr = Cells(2, colPODate).Address(False, False)
-    LnDtAddr = Cells(2, FindColumn("Line Date Requested")).Address(False, False)
+    LnDtAddr = Cells(2, FindColumn("Line Promise Date")).Address(False, False)
     TotalRows = ActiveSheet.UsedRange.Rows.Count
     TotalCols = Columns(Columns.Count).End(xlToLeft).Column + 1
 
@@ -236,11 +236,18 @@ Sub ExportSheets()
     Dim FileName As String
     Dim FileExt As String
     Dim NameLen As String
+    Dim TotalCols As Integer
+    Dim TotalRows As Long
+    Dim s As Worksheet
     Dim i As Long
 
-    FilePath = "\\br3615gaps\gaps\Expedite Report\"
+    FilePath = "\\br3615gaps\gaps\Expedite Report\" & Format(Date, "yyyy") & "\" & Format(Date, "mmmm") & "\"
     FileName = "Expedite Report " & Format(Date, "yyyy-mm-dd")
     FileExt = ".xlsx"
+
+    If Not FolderExists(FilePath) Then
+        RecMkDir FilePath
+    End If
 
     NameLen = Len(FileName)
     For i = 1 To 50
@@ -250,6 +257,35 @@ Sub ExportSheets()
     Next
 
     Sheets(Array("0-14 Days", "15-30 Days", "31+ Days")).Copy
+
+    'Fix number formats
+    For Each s In ActiveWorkbook.Sheets
+        s.Select
+        TotalRows = ActiveSheet.UsedRange.Rows.Count
+        TotalCols = ActiveSheet.UsedRange.Columns.Count
+
+        For i = 1 To TotalCols
+            If Cells(1, i).Value <> "Line Promise Date" And _
+               Cells(1, i).Value <> "PO Date" And _
+               Cells(1, i).Value <> "Item" And _
+               Cells(1, i).Value <> "Sim" And _
+               Cells(1, i).Value <> "Supplier#" Then
+                With Range(Cells(2, i), Cells(TotalRows, i))
+                    .NumberFormat = "General"
+                    .Value = .Value
+                End With
+            Else
+                With Range(Cells(2, i), Cells(TotalRows, i))
+                    .NumberFormat = "m/d/yyyy"
+                    .Value = .Value
+                End With
+            End If
+        Next
+
+        ActiveSheet.UsedRange.Columns.AutoFit
+    Next
+
+    Sheets(1).Select
     ActiveWorkbook.SaveAs FilePath & FileName & FileExt, xlOpenXMLWorkbook
     ActiveWorkbook.Close
 
