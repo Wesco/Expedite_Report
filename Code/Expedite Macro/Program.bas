@@ -18,9 +18,11 @@ Sub Main()
     FilterAndSplit
     ExportSheets
     Clean
+    
     Sheets("Macro").Select
     Range("C7").Select
     MsgBox "Complete!"
+    
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
     Exit Sub
@@ -56,21 +58,25 @@ Sub RemoveColumns()
 End Sub
 
 Sub CalculateAge()
-    Dim TotalCols As Integer
-    Dim colPODate As Integer
     Dim TotalRows As Long
+    Dim TotalCols As Integer
     Dim PODtAddr As String
-    Dim LnDtAddr As String
-
-
+    Dim colLnDt As Integer
+    Dim colPODate As Integer
+    
     Sheets("Expedite Report").Select
     colPODate = FindColumn("PO Date")
+    colLnDt = FindColumn("Line Promise Date")
     PODtAddr = Cells(2, colPODate).Address(False, False)
-    LnDtAddr = Cells(2, FindColumn("Line Promise Date")).Address(False, False)
     TotalRows = ActiveSheet.UsedRange.Rows.Count
     TotalCols = Columns(Columns.Count).End(xlToLeft).Column + 1
 
-    With Range(Cells(2, colPODate - 1), Cells(TotalRows, colPODate))
+    With Range(Cells(2, colPODate), Cells(TotalRows, colPODate))
+        .Value = .Value
+        .NumberFormat = "m/d/yyyy;@"
+    End With
+    
+    With Range(Cells(2, colLnDt), Cells(TotalRows, colLnDt))
         .Value = .Value
         .NumberFormat = "m/d/yyyy;@"
     End With
