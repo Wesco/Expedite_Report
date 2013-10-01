@@ -13,16 +13,17 @@ Sub Main()
     RemoveBuyerCodes
     RemoveSODS
     RemoveLTZ
+    RemoveReceived
     CalculateAge
     SortAZ
     FilterAndSplit
     ExportSheets
     Clean
-    
+
     Sheets("Macro").Select
     Range("C7").Select
     MsgBox "Complete!"
-    
+
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
     Exit Sub
@@ -36,6 +37,7 @@ Sub RemoveColumns()
 
     Sheets("Expedite Report").Select
 
+    'Remove all columns that are not listed
     For i = ActiveSheet.UsedRange.Columns.Count To 1 Step -1
         If Cells(1, i).Value <> "BR" And _
            Cells(1, i).Value <> "WBC" And _
@@ -51,6 +53,7 @@ Sub RemoveColumns()
            Cells(1, i).Value <> "Open Qty" And _
            Cells(1, i).Value <> "Line Promise Date" And _
            Cells(1, i).Value <> "PO Date" And _
+           Cells(1, i).Value <> "Rcd Tot" And _
            Cells(1, i).Value <> "supplier name" Then
             Columns(i).Delete
         End If
@@ -63,7 +66,7 @@ Sub CalculateAge()
     Dim PODtAddr As String
     Dim colLnDt As Integer
     Dim colPODate As Integer
-    
+
     Sheets("Expedite Report").Select
     colPODate = FindColumn("PO Date")
     colLnDt = FindColumn("Line Promise Date")
@@ -75,7 +78,7 @@ Sub CalculateAge()
         .Value = .Value
         .NumberFormat = "m/d/yyyy;@"
     End With
-    
+
     With Range(Cells(2, colLnDt), Cells(TotalRows, colLnDt))
         .Value = .Value
         .NumberFormat = "m/d/yyyy;@"
@@ -237,6 +240,35 @@ Sub RemoveLTZ()
     Range(Cells(1, 1), Cells(1, TotalCols)).Value = ColHeaders
 End Sub
 
+Sub RemoveReceived()
+    Dim colRecQty As Integer
+    Dim ColHeaders As Variant
+    Dim TotalCols As Integer
+    Dim TotalRows As Long
+    
+    Sheets("Expedite Report").Select
+
+    TotalRows = ActiveSheet.UsedRange.Rows.Count
+    TotalCols = ActiveSheet.UsedRange.Columns.Count
+    colRecQty = FindColumn("Rcd Tot")
+    
+    With Range(Cells(2, colRecQty), Cells(TotalRows, colRecQty))
+        .Value = .Value
+    End With
+    
+    ColHeaders = Range(Cells(1, 1), Cells(1, TotalCols))
+    Range(Cells(1, 1), Cells(TotalRows, TotalCols)).AutoFilter Field:=colRecQty, Criteria1:=">0"
+    Cells.Delete
+    Rows(1).Insert
+    Range(Cells(1, 1), Cells(1, TotalCols)) = ColHeaders
+    Columns(colRecQty).Delete
+End Sub
+
+'---------------------------------------------------------------------------------------
+' Proc : ExportSheets
+' Date : 9/25/2013
+' Desc : Save report to the network
+'---------------------------------------------------------------------------------------
 Sub ExportSheets()
     Dim FilePath As String
     Dim FileName As String
@@ -264,31 +296,12 @@ Sub ExportSheets()
 
     Sheets(Array("0-14 Days", "15-30 Days", "31+ Days")).Copy
 
-    'Fix number formats
     For Each s In ActiveWorkbook.Sheets
         s.Select
-        TotalRows = ActiveSheet.UsedRange.Rows.Count
-        TotalCols = ActiveSheet.UsedRange.Columns.Count
-
-        For i = 1 To TotalCols
-            If Cells(1, i).Value <> "Line Promise Date" And _
-               Cells(1, i).Value <> "PO Date" And _
-               Cells(1, i).Value <> "Item" And _
-               Cells(1, i).Value <> "Sim" And _
-               Cells(1, i).Value <> "Supplier#" Then
-                With Range(Cells(2, i), Cells(TotalRows, i))
-                    .NumberFormat = "General"
-                    .Value = .Value
-                End With
-            Else
-                With Range(Cells(2, i), Cells(TotalRows, i))
-                    .NumberFormat = "m/d/yyyy"
-                    .Value = .Value
-                End With
-            End If
-        Next
-
-        ActiveSheet.UsedRange.Columns.AutoFit
+        TotalCols = s.UsedRange.Columns.Count
+        s.UsedRange.AutoFilter
+        s.Range(Cells(1, 1), Cells(1, TotalCols)).HorizontalAlignment = xlCenter
+        s.UsedRange.Columns.AutoFit
     Next
 
     Sheets(1).Select
@@ -298,57 +311,39 @@ Sub ExportSheets()
     Email "JAbercrombie@wescodist.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
 End Sub
 
+'---------------------------------------------------------------------------------------
+' Proc : Clean
+' Date : 9/25/2013
+' Desc : Removes all data from the macro workbook
+'---------------------------------------------------------------------------------------
 Sub Clean()
+    Dim PrevDispAlert As Boolean
+    Dim PrevScrnUpdat As Boolean
+    Dim PrevWkbk As Workbook
     Dim s As Worksheet
 
+    PrevDispAlert = Application.DisplayAlerts
+    PrevScrnUpdat = Application.ScreenUpdating
+    Set PrevWkbk = ActiveWorkbook
+
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+    ThisWorkbook.Activate
+
+    'Remove filters and delete cells
     For Each s In ThisWorkbook.Sheets
         If s.Name <> "Macro" Then
+            s.Select
             s.AutoFilterMode = False
             s.Cells.Delete
+            s.Cells(1, 1).Select
         End If
     Next
+
+    Sheets("Macro").Select
+    Range("C7").Select
+
+    PrevWkbk.Activate
+    Application.DisplayAlerts = PrevDispAlert
+    Application.ScreenUpdating = PrevScrnUpdat
 End Sub
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
