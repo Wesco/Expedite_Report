@@ -45,5 +45,5 @@ Sub ExportSheets()
     ActiveWorkbook.SaveAs FilePath & FileName & FileExt, xlOpenXMLWorkbook
     ActiveWorkbook.Close
 
-    'Email "JAbercrombie@wescodist.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
+    Email "JAbercrombie@wescodist.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
 End Sub

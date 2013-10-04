@@ -111,26 +111,19 @@ Sub RemoveLTZ()
     Range(Cells(1, 1), Cells(1, TotalCols)).Value = ColHeaders
 End Sub
 
-Sub RemoveReceived()
-    Dim colRecQty As Integer
-    Dim ColHeaders As Variant
-    Dim TotalCols As Integer
+Sub RemoveDuplicates()
+    Dim POAddr As String
+    Dim LNAddr As String
     Dim TotalRows As Long
 
     Sheets("Expedite Report").Select
-
+    POAddr = Cells(2, FindColumn("PO No")).Address(False, False)
+    LNAddr = Cells(2, FindColumn("Line No")).Address(False, False)
     TotalRows = ActiveSheet.UsedRange.Rows.Count
-    TotalCols = ActiveSheet.UsedRange.Columns.Count
-    colRecQty = FindColumn("Rcd Tot")
 
-    With Range(Cells(2, colRecQty), Cells(TotalRows, colRecQty))
-        .Value = .Value
-    End With
-
-    ColHeaders = Range(Cells(1, 1), Cells(1, TotalCols))
-    Range(Cells(1, 1), Cells(TotalRows, TotalCols)).AutoFilter Field:=colRecQty, Criteria1:=">0"
-    Cells.Delete
-    Rows(1).Insert
-    Range(Cells(1, 1), Cells(1, TotalCols)) = ColHeaders
-    Columns(colRecQty).Delete
+    Columns(1).Insert
+    Range("A1").Value = "UID"
+    Range("A2:A" & TotalRows).Formula = "=" & POAddr & "&" & LNAddr
+    ActiveSheet.UsedRange.RemoveDuplicates Columns:=1, Header:=xlYes
+    Columns(1).Delete
 End Sub

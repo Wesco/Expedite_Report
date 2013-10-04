@@ -10,6 +10,7 @@ Sub Main()
     Application.DisplayAlerts = False
 
     RemoveColumns       'Remove columns not needed on the report
+    RemoveDuplicates    'Remove duplicate lines
     RemoveBuyerCodes    'Remove buyer codes that do not need to be reviewed
     RemoveSODS          'Remove all SO and DS POs
     RemoveLTZ           'Remove all items that have been completely received or over received
