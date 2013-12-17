@@ -97,4 +97,10 @@ Sub FilterAndSplit()
     Columns(FilterCol).Delete
     Range(Cells(2, FilterCol), Cells(TotalRows, FilterCol)).Value = _
     Range(Cells(2, FilterCol), Cells(TotalRows, FilterCol)).Value
+
+    Sheets("Expedite Report").Select
+    TotalRows = ActiveSheet.UsedRange.Rows.Count
+    Columns(FilterCol).Delete
+    Range(Cells(2, FilterCol), Cells(TotalRows, FilterCol)).Value = _
+    Range(Cells(2, FilterCol), Cells(TotalRows, FilterCol)).Value
 End Sub
