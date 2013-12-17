@@ -31,7 +31,7 @@ Sub ExportSheets()
         End If
     Next
 
-    Sheets(Array("0-14 Days", "15-30 Days", "31+ Days")).Copy
+    Sheets(Array("Expedite Report", "0-14 Days", "15-30 Days", "31+ Days")).Copy
 
     For Each s In ActiveWorkbook.Sheets
         s.Select
@@ -45,5 +45,5 @@ Sub ExportSheets()
     ActiveWorkbook.SaveAs FilePath & FileName & FileExt, xlOpenXMLWorkbook
     ActiveWorkbook.Close
 
-    Email "JAbercrombie@wescodist.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
+    Email "ABridges@wesco.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
 End Sub
