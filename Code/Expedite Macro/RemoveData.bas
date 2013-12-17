@@ -117,12 +117,12 @@ Sub RemoveDuplicates()
     Dim TotalRows As Long
 
     Sheets("Expedite Report").Select
+    Columns(1).Insert
+    Range("A1").Value = "UID"
     POAddr = Cells(2, FindColumn("PO No")).Address(False, False)
     LNAddr = Cells(2, FindColumn("Line No")).Address(False, False)
     TotalRows = ActiveSheet.UsedRange.Rows.Count
 
-    Columns(1).Insert
-    Range("A1").Value = "UID"
     Range("A2:A" & TotalRows).Formula = "=" & POAddr & "&" & LNAddr
     ActiveSheet.UsedRange.RemoveDuplicates Columns:=1, Header:=xlYes
     Columns(1).Delete
