@@ -24,13 +24,6 @@ Sub ExportSheets()
         RecMkDir FilePath
     End If
 
-    NameLen = Len(FileName)
-    For i = 1 To 50
-        If FileExists(FilePath & FileName & FileExt) Then
-            FileName = Left(FileName, NameLen) & " (" & i & ")"
-        End If
-    Next
-
     Sheets(Array("Expedite Report", "0-14 Days", "15-30 Days", "31+ Days")).Copy
 
     For Each s In ActiveWorkbook.Sheets
