@@ -7,6 +7,7 @@ Option Explicit
 ' Desc : Save report to the network
 '---------------------------------------------------------------------------------------
 Sub ExportSheets()
+    Dim PrevDispAlert As Boolean
     Dim FilePath As String
     Dim FileName As String
     Dim FileExt As String
@@ -16,6 +17,7 @@ Sub ExportSheets()
     Dim s As Worksheet
     Dim i As Long
 
+    PrevDispAlert = Application.DisplayAlerts
     FilePath = "\\br3615gaps\gaps\Expedite Report\" & Format(Date, "yyyy") & "\" & Format(Date, "mmmm") & "\"
     FileName = "Expedite Report " & Format(Date, "yyyy-mm-dd")
     FileExt = ".xlsx"
@@ -35,8 +37,25 @@ Sub ExportSheets()
     Next
 
     Sheets(1).Select
+    Application.DisplayAlerts = True
+    On Error GoTo Save_Err
     ActiveWorkbook.SaveAs FilePath & FileName & FileExt, xlOpenXMLWorkbook
+    On Error GoTo 0
+
+    Application.DisplayAlerts = False
     ActiveWorkbook.Close
+    Application.DisplayAlerts = PrevDispAlert
 
     Email "ABridges@wesco.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
+    Exit Sub
+
+Save_Err:
+    NameLen = Len(FileName)
+    For i = 1 To 2147483647
+        If FileExists(FilePath & FileName & FileExt) Then
+            FileName = Left(FileName, NameLen) & " (" & i & ")"
+        End If
+    Next
+    Resume
+
 End Sub
