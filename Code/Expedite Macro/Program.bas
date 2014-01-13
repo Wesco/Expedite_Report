@@ -3,7 +3,7 @@ Option Explicit
 
 Sub Main()
     On Error GoTo Failed_Import
-    UserImportFile Sheets("Expedite Report").Range("A1"), False
+    UserImportFile Sheets("Expedite Report").Range("A1"), True
     On Error GoTo 0
 
     Application.ScreenUpdating = False
