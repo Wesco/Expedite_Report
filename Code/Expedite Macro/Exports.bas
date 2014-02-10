@@ -46,7 +46,7 @@ Sub ExportSheets()
     ActiveWorkbook.Close
     Application.DisplayAlerts = PrevDispAlert
 
-    Email "ABridges@wesco.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
+    Email "ACoffey@wesco.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
     Exit Sub
 
 Save_Err:
