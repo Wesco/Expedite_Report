@@ -1,7 +1,7 @@
 Attribute VB_Name = "Program"
 Option Explicit
 
-Sub Main()
+Sub CreateReport()
     On Error GoTo Failed_Import
     UserImportFile Sheets("Expedite Report").Range("A1"), True
     On Error GoTo 0
