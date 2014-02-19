@@ -44,7 +44,7 @@ End Sub
 '---------------------------------------------------------------------------------------
 Sub ImportReport()
     ImportExpedite
-    
+    ImportContacts
 End Sub
 
 '---------------------------------------------------------------------------------------
@@ -53,7 +53,88 @@ End Sub
 ' Desc : Emails items to their respective suppliers
 '---------------------------------------------------------------------------------------
 Sub SendEmail()
+    'Email variables
+    Dim Body As String
+    Dim Subject As String
+    Dim SuppName As String
+    Dim Contact As String
+    Dim PONumber As String
+    Dim Created As String
+    Dim Branch As String
 
+    'Loop conditionals
+    Dim PrevCell As String
+    Dim CurrCell As String
+    Dim NextCell As String
+    Dim StartRow As Long
+    Dim EndRow As Long
+    Dim TotalRows As Long
+
+    'Loop counters
+    Dim i As Long
+    Dim j As Long
+
+    Sheets("PO Conf").Select
+    TotalRows = ActiveSheet.UsedRange.Rows.Count
+    Branch = Sheets("473").Range("A2")
+
+    For i = 2 To TotalRows
+        PrevCell = Cells(i - 1, 3).Value
+        CurrCell = Cells(i, 3).Value
+        NextCell = Cells(i + 1, 3).Value
+
+        If CurrCell <> PrevCell And CurrCell <> NextCell Then
+            'Only one PO for this supplier
+            PONumber = Cells(i, 1).Value
+            Created = Format(Cells(i, 2).Value, "mmm dd, yyyy")
+            SuppName = Cells(i, 4).Value
+
+            Contact = Cells(i, 5).Value
+            Subject = "Please send an estimated ship date for PO# " & Branch & "-" & PONumber
+            Body = "<tr>" & _
+                   "<td>" & Branch & "-" & PONumber & "</td>" & _
+                   "<td>" & Created & "</td>" & _
+                   "<td>" & SuppName & "</td>" & _
+                   "</tr>"
+
+            If Contact <> "" Then
+                Email Contact, Subject:=Subject, Body:=EmailHeader & Body & EmailFooter
+            End If
+
+            'Reset email body
+            Body = ""
+        ElseIf CurrCell = NextCell And CurrCell <> PrevCell Then
+            'First cell for this supplier
+            StartRow = i
+        ElseIf CurrCell <> NextCell And CurrCell = PrevCell Then
+            'Last cell for this supplier
+            EndRow = i
+
+            'Add all rows to the email in a table
+            For j = StartRow To EndRow
+                PONumber = Cells(j, 1).Value
+                Created = Format(Cells(j, 2).Value, "mmm dd, yyyy")
+                SuppName = Cells(j, 4).Value
+
+                Body = Body & "<tr>" & _
+                       "<td>" & Branch & "-" & PONumber & "</td>" & _
+                       "<td>" & Created & "</td>" & _
+                       "<td>" & SuppName & "</td>" & _
+                       "</tr>"
+            Next
+            Subject = "Please send estimated ship dates"
+            Contact = Cells(i, 5).Value
+
+            If Contact <> "" Then
+                Email Contact, Subject:=Subject, Body:=EmailHeader & Body & EmailFooter
+            End If
+
+            'Reset email body
+            Body = ""
+        End If
+    Next
+
+    MsgBox "Complete!"
 End Sub
 
 '---------------------------------------------------------------------------------------

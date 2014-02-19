@@ -84,3 +84,26 @@ Sub ImportExpedite()
 
     Application.DisplayAlerts = PrevDispAlerts
 End Sub
+
+'---------------------------------------------------------------------------------------
+' Proc : ImportContacts
+' Date : 2/19/2014
+' Desc : Imports the supplier contact master
+'---------------------------------------------------------------------------------------
+Sub ImportContacts()
+    Dim PrevDispAlerts As Boolean
+    Dim FilePath As String
+    Dim FileName As String
+
+    PrevDispAlerts = Application.DisplayAlerts
+    Application.DisplayAlerts = False
+
+    FilePath = "\\br3615gaps\gaps\Contacts\"
+    FileName = "Supplier Contact Master.xlsx"
+
+    Workbooks.Open FilePath & FileName
+    ActiveSheet.UsedRange.Copy Destination:=ThisWorkbook.Sheets("Contact Master").Range("A1")
+    ActiveWorkbook.Close
+
+    Application.DisplayAlerts = PrevDispAlerts
+End Sub
