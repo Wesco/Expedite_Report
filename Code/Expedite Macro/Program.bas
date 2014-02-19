@@ -34,15 +34,16 @@ Sub CreateReport()
     Exit Sub
 
 Failed_Import:
-    MsgBox ERR.Description, vbOKOnly, ERR.Source
+    MsgBox Err.Description, vbOKOnly, Err.Source
 End Sub
 
 '---------------------------------------------------------------------------------------
 ' Proc : ImportReport
 ' Date : 2/19/2014
-' Desc : Imports the most recent expedite report
+' Desc : Imports the most recent expedite report and gets
 '---------------------------------------------------------------------------------------
 Sub ImportReport()
+    ImportExpedite
     
 End Sub
 
@@ -52,7 +53,7 @@ End Sub
 ' Desc : Emails items to their respective suppliers
 '---------------------------------------------------------------------------------------
 Sub SendEmail()
-    
+
 End Sub
 
 '---------------------------------------------------------------------------------------
