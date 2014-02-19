@@ -38,9 +38,18 @@ Failed_Import:
 End Sub
 
 '---------------------------------------------------------------------------------------
+' Proc : ImportReport
+' Date : 2/19/2014
+' Desc : Imports the most recent expedite report
+'---------------------------------------------------------------------------------------
+Sub ImportReport()
+    
+End Sub
+
+'---------------------------------------------------------------------------------------
 ' Proc : SendEmail
 ' Date : 2/19/2014
-' Desc : Imports the most recent report and emails it to suppliers
+' Desc : Emails items to their respective suppliers
 '---------------------------------------------------------------------------------------
 Sub SendEmail()
     
