@@ -33,6 +33,15 @@ Failed_Import:
 End Sub
 
 '---------------------------------------------------------------------------------------
+' Proc : SendEmail
+' Date : 2/19/2014
+' Desc : Imports the most recent report and emails it to suppliers
+'---------------------------------------------------------------------------------------
+Sub SendEmail()
+    
+End Sub
+
+'---------------------------------------------------------------------------------------
 ' Proc : Clean
 ' Date : 9/25/2013
 ' Desc : Removes all data from the macro workbook
