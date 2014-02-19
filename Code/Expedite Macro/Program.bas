@@ -1,6 +1,11 @@
 Attribute VB_Name = "Program"
 Option Explicit
 
+'---------------------------------------------------------------------------------------
+' Proc : CreateReport
+' Date : 2/19/2014
+' Desc : Imports an expedite report from WPS, then formats and saves it to the network
+'---------------------------------------------------------------------------------------
 Sub CreateReport()
     On Error GoTo Failed_Import
     UserImportFile Sheets("Expedite Report").Range("A1"), True
