@@ -104,3 +104,26 @@ Sub FilterAndSplit()
     Range(Cells(2, FilterCol), Cells(TotalRows, FilterCol)).Value = _
     Range(Cells(2, FilterCol), Cells(TotalRows, FilterCol)).Value
 End Sub
+
+Sub LookupEmails()
+    Dim ColSupplierNum As Integer
+    Dim SupNumAddr As String
+    Dim TotalCols As Integer
+    Dim TotalRows As Long
+
+    Sheets("Expedite Report").Select
+
+    TotalRows = ActiveSheet.UsedRange.Rows.Count
+    TotalCols = ActiveSheet.UsedRange.Columns.Count
+    ColSupplierNum = FindColumn("Supplier#")
+    SupNumAddr = Cells(2, ColSupplierNum).Address(False, False)
+
+    If ColSupplierNum > 0 Then
+        Cells(1, TotalCols + 1).Value = "Email"
+        With Range(Cells(2, TotalCols + 1), Cells(TotalRows, TotalCols + 1))
+            .Formula = _
+            "=IFERROR(IF(VLOOKUP(" & SupNumAddr & ",'Contact Master'!A:B,2,FALSE)=0,"""",VLOOKUP(" & SupNumAddr & ",'Contact Master'!A:B,2,FALSE)),"""")"
+            .Value = .Value
+        End With
+    End If
+End Sub
