@@ -62,6 +62,9 @@ Sub SendEmail()
     Dim PONumber As String
     Dim Created As String
     Dim Branch As String
+    Dim ItemNum As String
+    Dim SimNum As String
+    Dim PromDt As String
 
     'Loop conditionals
     Dim PrevCell As String
@@ -72,12 +75,15 @@ Sub SendEmail()
     Dim TotalRows As Long
 
     'Column numbers
+    Dim ColPromDt As Integer
     Dim ColContact As Integer
     Dim ColSupNum As Integer
     Dim ColPONum As Integer
     Dim ColBrNum As Integer
     Dim ColName As Integer
     Dim ColDate As Integer
+    Dim ColItem As Integer
+    Dim ColSim As Integer
 
     'Loop counters
     Dim i As Long
@@ -86,14 +92,18 @@ Sub SendEmail()
     Sheets("Expedite Report").Select
 
     TotalRows = ActiveSheet.UsedRange.Rows.Count
+    ColPromDt = FindColumn("Line Promise Date")
     ColPONum = FindColumn("PO No")
     ColBrNum = FindColumn("BR")
     ColName = FindColumn("supplier name")
     ColDate = FindColumn("PO Date")
     ColSupNum = FindColumn("Supplier#")
     ColContact = FindColumn("Email")
+    ColItem = FindColumn("Item")
+    ColSim = FindColumn("Sim")
 
-    If ColPONum = 0 Or ColBrNum = 0 Or ColName = 0 Or ColDate = 0 Or ColSupNum = 0 Or ColContact = 0 Then
+    If ColPONum = 0 Or ColBrNum = 0 Or ColName = 0 Or ColDate = 0 Or ColPromDt = 0 Or _
+       ColSupNum = 0 Or ColContact = 0 Or ColItem = 0 Or ColSim = 0 Then
         Err.Raise CustErr.COLNOTFOUND, "SendEmail", "A column could not be found."
     End If
 
@@ -108,12 +118,17 @@ Sub SendEmail()
             PONumber = Cells(i, ColPONum).Value
             Created = Format(Cells(i, ColDate).Value, "mmm dd, yyyy")
             SuppName = Cells(i, ColName).Value
+            SimNum = Cells(i, ColSim).Value
+            ItemNum = Cells(i, ColItem).Value
+            PromDt = Format(Cells(i, ColPromDt).Value, "mmm dd, yyyy")
 
             Contact = Cells(i, ColContact).Value
             Subject = "Please send an estimated ship date for PO# " & Branch & "-" & PONumber
             Body = "<tr>" & _
                    "<td>" & Branch & "-" & PONumber & "</td>" & _
                    "<td>" & Created & "</td>" & _
+                   "<td>" & PromDt & "</td>" & _
+                   "<td>" & ItemNum & SimNum & "</td>" & _
                    "<td>" & SuppName & "</td>" & _
                    "</tr>"
 
@@ -135,10 +150,15 @@ Sub SendEmail()
                 PONumber = Cells(j, ColPONum).Value
                 Created = Format(Cells(j, ColDate).Value, "mmm dd, yyyy")
                 SuppName = Cells(j, ColName).Value
+                SimNum = Cells(j, ColSim).Value
+                ItemNum = Cells(j, ColItem).Value
+                PromDt = Format(Cells(j, ColPromDt).Value, "mmm dd, yyyy")
 
                 Body = Body & "<tr>" & _
                        "<td>" & Branch & "-" & PONumber & "</td>" & _
                        "<td>" & Created & "</td>" & _
+                       "<td>" & PromDt & "</td>" & _
+                       "<td>" & ItemNum & SimNum & "</td>" & _
                        "<td>" & SuppName & "</td>" & _
                        "</tr>"
             Next
@@ -170,12 +190,12 @@ Private Function EmailHeader()
                   "<br>" & _
                   "Please review the list of orders below and confirm that they have been received and provide an estimated ship date. " & _
                   "<br>" & _
-                  "If you are receiving this for a second time, we may not have received an estimated shipping date in your original response." & _
+                  "If you are receiving this for a second time, we may not have received an estimated shipping date in your original response or the promise date has passed." & _
                   "<br>" & _
                   "<br>" & _
                   "<br>" & _
                   "<table>" & _
-                  "<th>PO</th><th>CREATED</th><th>SUPPLIER</th>"
+                  "<th>PO</th><th>CREATED</th><th>PROMISED</th><th>SIM</th><th>SUPPLIER</th>"
 End Function
 
 Private Function EmailFooter()

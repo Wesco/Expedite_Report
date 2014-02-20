@@ -42,7 +42,8 @@ Sub ImportExpedite()
             ColPOAge = FindColumn("PO Age")
 
             If ColPromiseDate > 0 And ColSupplierNum > 0 And ColBranchNum > 0 And ColPOAge > 0 Then
-                ActiveSheet.UsedRange.AutoFilter Field:=ColPromiseDate, Criteria1:="="
+                'ActiveSheet.UsedRange.AutoFilter Field:=ColPromiseDate, Criteria1:="="
+                ActiveSheet.UsedRange.AutoFilter Field:=ColPromiseDate, Criteria1:="<" & Format(Date, "m/d/yyyy"), Operator:=xlOr, Criteria2:="="
                 ActiveSheet.UsedRange.Copy Destination:=ThisWorkbook.Sheets("Expedite Report").Range("A1")
                 ActiveWorkbook.Close
 
