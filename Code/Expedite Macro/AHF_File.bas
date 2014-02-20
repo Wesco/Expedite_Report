@@ -12,7 +12,13 @@ Function FileExists(ByVal sPath As String) As Boolean
     'Remove trailing backslash
     If InStr(Len(sPath), sPath, "\") > 0 Then sPath = Left(sPath, Len(sPath) - 1)
     'Check to see if the directory exists and return true/false
+    On Error GoTo File_Error
     If Dir(sPath, vbDirectory) <> "" Then FileExists = True
+    On Error GoTo 0
+    Exit Function
+
+File_Error:
+    FileExists = False
 End Function
 
 '---------------------------------------------------------------------------------------
