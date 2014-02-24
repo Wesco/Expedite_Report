@@ -1,7 +1,7 @@
 Attribute VB_Name = "Program"
 Option Explicit
 Public Const RepositoryName As String = "Expedite_Report"
-Public Const VersionNumber As String = "1.1.1"
+Public Const VersionNumber As String = "1.1.2"
 
 '---------------------------------------------------------------------------------------
 ' Proc : CreateReport
@@ -149,6 +149,7 @@ Sub SendEmail()
 
             'Add all rows to the email in a table
             For j = StartRow To EndRow
+                Branch = Cells(j, ColBrNum).Value
                 PONumber = Cells(j, ColPONum).Value
                 Created = Format(Cells(j, ColDate).Value, "mmm dd, yyyy")
                 SuppName = Cells(j, ColName).Value

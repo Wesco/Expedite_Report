@@ -103,6 +103,7 @@ Sub ImportContacts()
     FileName = "Supplier Contact Master.xlsx"
 
     Workbooks.Open FilePath & FileName
+    ActiveSheet.AutoFilterMode = False
     ActiveSheet.UsedRange.Copy Destination:=ThisWorkbook.Sheets("Contact Master").Range("A1")
     ActiveWorkbook.Close
 
