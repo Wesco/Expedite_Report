@@ -130,7 +130,7 @@ Sub SendEmail()
                    "<td>" & Branch & "-" & PONumber & "</td>" & _
                    "<td>" & Created & "</td>" & _
                    "<td>" & PromDt & "</td>" & _
-                   "<td>" & ItemNum & SimNum & "</td>" & _
+                   "<td>" & SimNum & ItemNum & "</td>" & _
                    "<td>" & SuppName & "</td>" & _
                    "</tr>"
 
@@ -161,7 +161,7 @@ Sub SendEmail()
                        "<td>" & Branch & "-" & PONumber & "</td>" & _
                        "<td>" & Created & "</td>" & _
                        "<td>" & PromDt & "</td>" & _
-                       "<td>" & ItemNum & SimNum & "</td>" & _
+                       "<td>" & SimNum & ItemNum & "</td>" & _
                        "<td>" & SuppName & "</td>" & _
                        "</tr>"
             Next
