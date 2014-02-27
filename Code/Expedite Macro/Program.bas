@@ -1,7 +1,7 @@
 Attribute VB_Name = "Program"
 Option Explicit
 Public Const RepositoryName As String = "Expedite_Report"
-Public Const VersionNumber As String = "1.1.3"
+Public Const VersionNumber As String = "1.1.4"
 
 '---------------------------------------------------------------------------------------
 ' Proc : CreateReport
