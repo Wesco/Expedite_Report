@@ -67,6 +67,7 @@ Sub SendEmail()
     Dim ItemNum As String
     Dim SimNum As String
     Dim PromDt As String
+    Dim Desc As String
 
     'Loop conditionals
     Dim PrevCell As String
@@ -86,6 +87,7 @@ Sub SendEmail()
     Dim ColDate As Integer
     Dim ColItem As Integer
     Dim ColSim As Integer
+    Dim ColDesc As Integer
 
     'Loop counters
     Dim i As Long
@@ -103,9 +105,10 @@ Sub SendEmail()
     ColContact = FindColumn("Email")
     ColItem = FindColumn("Item")
     ColSim = FindColumn("Sim")
+    ColDesc = FindColumn("Desc")
 
     If ColPONum = 0 Or ColBrNum = 0 Or ColName = 0 Or ColDate = 0 Or ColPromDt = 0 Or _
-       ColSupNum = 0 Or ColContact = 0 Or ColItem = 0 Or ColSim = 0 Then
+       ColSupNum = 0 Or ColContact = 0 Or ColItem = 0 Or ColSim = 0 Or ColDesc = 0 Then
         Err.Raise CustErr.COLNOTFOUND, "SendEmail", "A column could not be found."
     End If
 
@@ -123,6 +126,7 @@ Sub SendEmail()
             SimNum = Cells(i, ColSim).Value
             ItemNum = Cells(i, ColItem).Value
             PromDt = Format(Cells(i, ColPromDt).Value, "mmm dd, yyyy")
+            Desc = Cells(i, ColDesc).Value
 
             Contact = Cells(i, ColContact).Value
             Subject = "Please send an estimated ship date for PO# " & Branch & "-" & PONumber
@@ -131,6 +135,7 @@ Sub SendEmail()
                    "<td>" & Created & "</td>" & _
                    "<td>" & PromDt & "</td>" & _
                    "<td>" & SimNum & ItemNum & "</td>" & _
+                   "<td>" & Desc & "</td>" & _
                    "<td>" & SuppName & "</td>" & _
                    "</tr>"
 
@@ -156,12 +161,14 @@ Sub SendEmail()
                 SimNum = Cells(j, ColSim).Value
                 ItemNum = Cells(j, ColItem).Value
                 PromDt = Format(Cells(j, ColPromDt).Value, "mmm dd, yyyy")
+                Desc = Cells(j, ColDesc).Value
 
                 Body = Body & "<tr>" & _
                        "<td>" & Branch & "-" & PONumber & "</td>" & _
                        "<td>" & Created & "</td>" & _
                        "<td>" & PromDt & "</td>" & _
                        "<td>" & SimNum & ItemNum & "</td>" & _
+                       "<td>" & Desc & "</td>" & _
                        "<td>" & SuppName & "</td>" & _
                        "</tr>"
             Next
@@ -183,10 +190,10 @@ End Sub
 Private Function EmailHeader()
     EmailHeader = "<html>" & _
                   "<style>" & _
-                  "table{border:1px solid black; border-collapse:collapse;}" & _
-                  "table,th,td{border:1px solid black;}" & _
-                  "td{padding:5px; text-align:center;}" & _
-                  "th{padding:5px;}" & _
+                  "table{border:1px solid black; border-collapse:collapse}" & _
+                  "table,th,td{border:1px solid black}" & _
+                  "td{padding:5px; text-align:left}" & _
+                  "th{padding:5px; text-align:center}" & _
                   "</style>" & _
                   "Dear Supplier," & _
                   "<br>" & _
@@ -198,7 +205,7 @@ Private Function EmailHeader()
                   "<br>" & _
                   "<br>" & _
                   "<table>" & _
-                  "<th>PO</th><th>CREATED</th><th>PROMISED</th><th>SIM</th><th>SUPPLIER</th>"
+                  "<th>PO</th><th>CREATED</th><th>PROMISED</th><th>SIM</th><th>DESCRIPTION</th><th>SUPPLIER</th>"
 End Function
 
 Private Function EmailFooter()

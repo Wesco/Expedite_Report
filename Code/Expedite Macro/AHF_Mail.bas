@@ -54,9 +54,6 @@ Sub Email(SendTo As String, Optional CC As String, Optional BCC As String, Optio
         .Send
         On Error GoTo 0
     End With
-
-    'Give the email time to send
-    Sleep 1500
     Exit Sub
 
 SEND_FAILED:
