@@ -103,7 +103,7 @@ Sub CheckForUpdates(RepoName As String, LocalVer As String)
     Set RegEx = CreateObject("VBScript.RegExp")
 
     'Try to get the contents of the text file
-    RemoteVer = DownloadTextFile("https://raw.github.com/Wesco/" & RepoName & "/master/Version.txt")
+    RemoteVer = DownloadTextFile("http://br3615gaps.wescodist.com/" & RepoName & "/Version.txt")
     RemoteVer = Replace(RemoteVer, vbLf, "")
     RemoteVer = Replace(RemoteVer, vbCr, "")
 
@@ -124,13 +124,16 @@ Sub CheckForUpdates(RepoName As String, LocalVer As String)
                 End If
             End If
         End If
+    Else
+        GoTo UPDATE_ERROR
     End If
     On Error GoTo 0
     Exit Sub
 
 UPDATE_ERROR:
     If MsgBox("An error occured while checking for updates." & vbCrLf & vbCrLf & _
-              "Would you like to open the website to download the latest version?", vbYesNo) = vbYes Then
+              "Would you like to open the website to download the latest version?", vbYesNo, _
+              "Version " & LocalVer) = vbYes Then
         ShellExecute 0, "Open", "http://github.com/Wesco/" & RepoName & "/releases/"
         If Workbooks.Count = 1 Then
             Application.Quit
