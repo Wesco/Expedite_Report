@@ -22,5 +22,6 @@ Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
 End Sub
 
 Private Sub Workbook_Open()
+    Range("A1").Value = "v" & VersionNumber
     CheckForUpdates RepositoryName, VersionNumber
 End Sub
