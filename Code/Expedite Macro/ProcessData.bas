@@ -111,8 +111,12 @@ Sub LookupEmails()
     Dim TotalCols As Integer
     Dim TotalRows As Long
 
-    Sheets("Expedite Report").Select
 
+    Sheets("Contact Master").Select
+    TotalRows = ActiveSheet.UsedRange.Rows.Count
+    Range("A2:A" & TotalRows).Value = Range("A2:A" & TotalRows).Value
+
+    Sheets("Expedite Report").Select
     TotalRows = ActiveSheet.UsedRange.Rows.Count
     TotalCols = ActiveSheet.UsedRange.Columns.Count
     ColSupplierNum = FindColumn("Supplier#")

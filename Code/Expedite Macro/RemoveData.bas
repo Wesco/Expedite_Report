@@ -31,31 +31,39 @@ End Sub
 
 Sub RemoveBuyerCodes()
     Dim BCAddr As Integer
+    Dim BCArry As Variant
     Dim TotalRows As Long
     Dim BuyerCodes As Variant
+    Dim FoundBC As Boolean
     Dim CurrCell As String
     Dim i As Long
+    Dim j As Integer
 
     Sheets("Expedite Report").Select
     TotalRows = ActiveSheet.UsedRange.Rows.Count
     BCAddr = FindColumn("WBC")
+    BCArry = Array("3615CC", "3615CS", "3615EB", "3615F1", "3615F2", "3615F3", "3615F4", "3615H1", "3615H2", "3615H3", "3615H4", _
+                   "3615JS", "3615LP", "3615LT", "3615MC", "3615MH", "3615ML", "3615MS", "3615PP", "3615ST", "3615T1", "3615T2", _
+                   "3615T3", "3615T4", "3615W1", "3615W2", "3615W3", "3615W4", "3615SW", "3615EA", "3615DK", "3615CQ", "3615IK", _
+                   "3615SK", "3615VB", "3615VK", "3615UT", "3615DR", "3615MY", "3615IR", "3615CK", "3615CP", "3615ZP", "3615ZK", _
+                   "3625BR", "3625OR", "3625BS", "3625OR", "3625EF", "3625OR", "3625EK", "3625OR", "3625EW", "3625OR", "3625LT", _
+                   "3625OR", "3625RC", "3625OR", "3625TB", "3625OR", "3625UT", "3625OR", "3625WD", "3625OR", "3625WH", "3625OR", _
+                   "3625WJ", "3625OR", "3625JC")
+
 
     For i = TotalRows To 2 Step -1
         CurrCell = Trim(Cells(i, 1).Value & Cells(i, BCAddr).Value)
+        FoundBC = False
+
         If Cells(i, 1).Value <> "3605" Then
-            If CurrCell <> "3615CC" And CurrCell <> "3615CQ" And CurrCell <> "3615CS" And CurrCell <> "3615DK" And _
-               CurrCell <> "3615EA" And CurrCell <> "3615EB" And CurrCell <> "3615IK" And CurrCell <> "3615JS" And _
-               CurrCell <> "3615T1" And CurrCell <> "3615T2" And CurrCell <> "3615T3" And CurrCell <> "3615T4" And _
-               CurrCell <> "3615W1" And CurrCell <> "3615W2" And CurrCell <> "3615W3" And CurrCell <> "3615W4" And _
-               CurrCell <> "3615H1" And CurrCell <> "3615H2" And CurrCell <> "3615H3" And CurrCell <> "3615H4" And _
-               CurrCell <> "3615F1" And CurrCell <> "3615F2" And CurrCell <> "3615F3" And CurrCell <> "3615F4" And _
-               CurrCell <> "3615LT" And CurrCell <> "3615PP" And CurrCell <> "3615MC" And CurrCell <> "3615MH" And _
-               CurrCell <> "3615ML" And CurrCell <> "3615MS" And CurrCell <> "3615SK" And CurrCell <> "3615SW" And _
-               CurrCell <> "3615ST" And CurrCell <> "3615VB" And CurrCell <> "3615VK" And CurrCell <> "3615DR" And _
-               CurrCell <> "3615LP" And CurrCell <> "3615CK" And CurrCell <> "3625BR" And CurrCell <> "3625BS" And _
-               CurrCell <> "3625EF" And CurrCell <> "3625EK" And CurrCell <> "3625EW" And CurrCell <> "3625LT" And _
-               CurrCell <> "3625RC" And CurrCell <> "3625TB" And CurrCell <> "3625UT" And CurrCell <> "3625WD" And _
-               CurrCell <> "3625WH" And CurrCell <> "3625WJ" Then
+            For j = 0 To UBound(BCArry)
+                If CurrCell = BCArry(j) Then
+                    FoundBC = True
+                    Exit For
+                End If
+            Next
+            
+            If FoundBC = False Then
                 Rows(i).Delete
             End If
         End If
