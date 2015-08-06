@@ -95,6 +95,7 @@ Sub ImportContacts()
     Dim PrevDispAlerts As Boolean
     Dim FilePath As String
     Dim FileName As String
+    Dim TotalRows As Long
 
     PrevDispAlerts = Application.DisplayAlerts
     Application.DisplayAlerts = False
@@ -106,6 +107,15 @@ Sub ImportContacts()
     ActiveSheet.AutoFilterMode = False
     ActiveSheet.UsedRange.Copy Destination:=ThisWorkbook.Sheets("Contact Master").Range("A1")
     ActiveWorkbook.Close
+    
+    'Store suppliers as text
+    ThisWorkbook.Activate
+    Sheets("Contact Master").Select
+    TotalRows = ActiveSheet.UsedRange.Rows.Count
+    Columns("A:A").Insert Shift:=xlToRight
+    Range("A1:A" & TotalRows).Formula = "=""=""&""""""""&B1&"""""""""
+    Range("A1:A" & TotalRows).Value = Range("A1:A" & TotalRows).Value
+    Columns("B:B").Delete
 
     Application.DisplayAlerts = PrevDispAlerts
 End Sub
