@@ -4,10 +4,11 @@ Option Explicit
 '---------------------------------------------------------------------------------------
 ' Proc : ExportSheets
 ' Date : 9/25/2013
-' Desc : Save report to the network
+' Desc : Save report to the disk
 '---------------------------------------------------------------------------------------
 Sub ExportSheets()
     Dim PrevDispAlert As Boolean
+    Dim SaveDialog As Object
     Dim FilePath As String
     Dim FileName As String
     Dim FileExt As String
@@ -15,16 +16,15 @@ Sub ExportSheets()
     Dim TotalCols As Integer
     Dim TotalRows As Long
     Dim s As Worksheet
+    Dim SaveFile As Variant
     Dim i As Long
 
+    Set SaveDialog = Application.FileDialog(msoFileDialogSaveAs)
+
     PrevDispAlert = Application.DisplayAlerts
-    FilePath = "\\br3615gaps\gaps\Expedite Report\" & Format(Date, "yyyy") & "\" & Format(Date, "mmmm") & "\"
+    FilePath = Environ("userprofile") + "\Desktop\"
     FileName = "Expedite Report " & Format(Date, "yyyy-mm-dd")
     FileExt = ".xlsx"
-
-    If Not FolderExists(FilePath) Then
-        RecMkDir FilePath
-    End If
 
     Sheets(Array("Expedite Report", "0-14 Days", "15-30 Days", "31+ Days")).Copy
 
@@ -38,24 +38,26 @@ Sub ExportSheets()
 
     Sheets(1).Select
     Application.DisplayAlerts = True
+
     On Error GoTo Save_Err
-    ActiveWorkbook.SaveAs FilePath & FileName & FileExt, xlOpenXMLWorkbook
+    With SaveDialog
+        .InitialFileName = FilePath & FileName & FileExt
+        SaveFile = .Show
+    End With
+    
+    If SaveFile = -1 Then
+        ActiveWorkbook.SaveAs FileName:=FilePath & FileName & FileExt, FileFormat:=xlWorkbook
+    ElseIf SaveFile = 0 Then
+        MsgBox "Expedite report not saved."
+    End If
     On Error GoTo 0
 
     Application.DisplayAlerts = False
     ActiveWorkbook.Close
     Application.DisplayAlerts = PrevDispAlert
-
-    Email "ACoffey@wesco.com", Subject:="Expedite Report", Body:="""" & FilePath & FileName & FileExt & """"
     Exit Sub
 
 Save_Err:
-    NameLen = Len(FileName)
-    For i = 1 To 2147483647
-        If FileExists(FilePath & FileName & FileExt) Then
-            FileName = Left(FileName, NameLen) & " (" & i & ")"
-        End If
-    Next
+    MsgBox "An error occurred while trying to save."
     Resume
-
 End Sub
